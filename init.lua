@@ -190,6 +190,33 @@ vim.diagnostic.config {
   jump = { float = true },
 }
 
+-- Save a named session
+-- TODO: Get this working
+vim.keymap.set('n', '<leader>sesh', function()
+  local name = vim.fn.input 'Session name: '
+  if name ~= '' then
+    local path = vim.fn.expand '~/sessions/' .. name .. '.vim'
+    vim.cmd('mksession! ' .. path)
+    print('Session saved to ' .. path)
+  end
+end, { desc = 'Save session' })
+
+-- Load a named session
+-- TODO: Get this working
+vim.keymap.set('n', '<leader>seshl', function()
+  local name = vim.fn.input 'Session name: '
+  if name ~= '' then
+    local path = vim.fn.expand '~/sessions/' .. name .. '.vim'
+    if vim.fn.filereadable(path) == 1 then
+      vim.cmd('source ' .. path)
+      print('Session loaded from ' .. path)
+    else
+      print('No session file: ' .. path)
+    end
+  end
+end, { desc = 'Load session' })
+
+-- Diagnostic keymaps
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
 -- Copy file path
