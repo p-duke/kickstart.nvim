@@ -302,9 +302,7 @@ require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   {
     'NMAC427/guess-indent.nvim',
-    config = function()
-      require('guess-indent').setup {}
-    end,
+    config = function() require('guess-indent').setup {} end,
   }, -- Detect tabstop and shiftwidth automatically
   {
     'tpope/vim-fugitive',
@@ -710,18 +708,20 @@ require('lazy').setup({
             },
           },
         },
-        pylsp = {
-          settings = {
-            pylsp = {
-              plugins = {
-                autopep8 = { enabled = false },
-                yapf = { enabled = false },
-                black = { enabled = false },
-                pyls_isort = { enabled = false },
-              },
-            },
-          },
-        },
+        -- Commenting out because I'm not sure I need this and testing without
+        -- pylsp = {
+        --   settings = {
+        --     pylsp = {
+        --       plugins = {
+        --         autopep8 = { enabled = false },
+        --         yapf = { enabled = false },
+        --         black = { enabled = false },
+        --         pyls_isort = { enabled = false },
+        --       },
+        --     },
+        --   },
+        -- },
+        ts_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -731,14 +731,12 @@ require('lazy').setup({
       --    :Mason
       --
       -- You can press `g?` for help in this menu.
-      local ensure_installed = vim.tbl_keys(servers or {})
-      vim.list_extend(ensure_installed, {
-        'lua_ls', -- Lua Language server
-        'stylua', -- Used to format Lua code
-        -- You can add other tools here that you want Mason to install
-      })
-
-      require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+      require('mason-tool-installer').setup {
+        ensure_installed = {
+          'stylua', -- Used to format Lua code
+          -- You can add other tools here that you want Mason to install
+        },
+      }
 
       for name, server in pairs(servers) do
         server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
@@ -967,19 +965,38 @@ require('lazy').setup({
       --  Check out: https://github.com/nvim-mini/mini.nvim
     end,
   },
-
-  { -- Highlight, edit, and navigate code
+  {
+    -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    build = ':TSUpdate', -- keeps parsers updated
     config = function()
-      local filetypes = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
-      require('nvim-treesitter').install(filetypes)
-      vim.api.nvim_create_autocmd('FileType', {
-        pattern = filetypes,
-        callback = function() vim.treesitter.start() end,
-      })
+      require('nvim-treesitter.configs').setup {
+        ensure_installed = {
+          'bash',
+          'c',
+          'diff',
+          'html',
+          'lua',
+          'luadoc',
+          'markdown',
+          'markdown_inline',
+          'query',
+          'vim',
+          'vimdoc',
+        },
+
+        auto_install = true,
+
+        highlight = {
+          enable = true,
+        },
+
+        indent = {
+          enable = true,
+        },
+      }
     end,
   },
-
   -- The following comments only work if you have downloaded the kickstart repo, not just copy pasted the
   -- init.lua. If you want these files, they are in the repository, so you can just download them and
   -- place them in the correct locations.
