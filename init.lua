@@ -681,10 +681,10 @@ require('lazy').setup({
       -- Enable the following language servers
       --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
       --  See `:help lsp-config` for information about keys and how to configure
+      --  INFO: ADD NEW LSP PLUGINS HERE
       local servers = {
         -- clangd = {},
         -- gopls = {},
-        -- pyright = {},
         -- rust_analyzer = {},
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -708,20 +708,18 @@ require('lazy').setup({
             },
           },
         },
-        -- Commenting out because I'm not sure I need this and testing without
-        -- pylsp = {
-        --   settings = {
-        --     pylsp = {
-        --       plugins = {
-        --         autopep8 = { enabled = false },
-        --         yapf = { enabled = false },
-        --         black = { enabled = false },
-        --         pyls_isort = { enabled = false },
-        --       },
-        --     },
-        --   },
-        -- },
         ts_ls = {},
+        pyright = {
+          settings = {
+            python = {
+              analysis = {
+                typeCheckingMode = 'basic',
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+              },
+            },
+          },
+        },
       }
 
       -- Ensure the servers and tools above are installed
